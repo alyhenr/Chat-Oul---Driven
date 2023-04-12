@@ -9,6 +9,7 @@
 html {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 body {
@@ -16,6 +17,9 @@ body {
     height: 667px;
 
     position: relative;
+
+    border: solid 1px #f3f3f3;
+    border-radius: 5px;
 }
 
 /* Header */
@@ -59,6 +63,8 @@ header>ion-icon {
     height: 507px;
 
     background-color: rgba(243, 243, 243, 1);
+
+    overflow-y: scroll;
 }
 
 /* Input field for messages */
@@ -71,6 +77,7 @@ footer {
 
 footer>input {
     border: none;
+    outline: none;
 }
 
 footer>ion-icon {

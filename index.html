@@ -9,7 +9,7 @@
         <title>ChatUOL-AlyssonHenrique</title>
     </head>
 
-    <body>
+    <body onload="enterChatRoom()">
         <header>
             <img src="./assets/logo 1.png" alt="logo">
             <ion-icon name="people"></ion-icon>
@@ -18,7 +18,7 @@
         </div>
         <footer>
             <input type="text" placeholder="Escreva aqui...">
-            <ion-icon name="paper-plane-outline"></ion-icon>
+            <ion-icon onclick="sendMessage()" name="paper-plane-outline"></ion-icon>
         </footer>
 
         <!-- Hidden menu -->
@@ -43,6 +43,12 @@
         <!-- Ion icon -->
         <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+        <!-- Axios -->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <!-- Script JS -->
+        <script src="app.js"></script>
     </body>
 
 </html>
