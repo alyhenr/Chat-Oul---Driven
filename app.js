@@ -1,64 +1,106 @@
+// Token HUB
+axios.defaults.headers.common["Authorization"] = "bk8mTTWZl6dSDpoGXZGMJauO";
+
+// URL's a serem utilizadas para as requesições
 const urlParticipants =
   "https://mock-api.driven.com.br/api/v6/uol/participants";
 const urlMessages = "https://mock-api.driven.com.br/api/vm/uol/messages";
 const urlStatus = "https://mock-api.driven.com.br/api/vm/uol/status";
-const urlSendMessage = "https://mock-api.driven.com.br/api/vm/uol/messages";
 
+// Armazenando o container html onde as menssagens serão renderizadas
 const container = document.querySelector(".container");
 
-const user = prompt("Digite o seu nome");
+// Pedindo o nome do usuário
+const userName = prompt("Digite seu nome");
 
-// Token HUB
-axios.defaults.headers.common["Authorization"] = "vqz5hauIujNzhFXvvpxQ8PMq";
-
+// Renderizando as menssagens no container html
 function renderMessages(res) {
+  container.innerHTML = "";
   res.data.forEach((object) => {
     const from = object.from;
     const to = object.to;
     const text = object.text;
     const time = object.time;
 
-    container.innerHTML += `
-      <p><span>${time}</span> ${from} para ${to}: ${text}</p>
+    container.innerHTML += `      
+      <p>
+        <span class="time">(${time})</span> <strong>${from}</strong> 
+          para <strong>${to}</strong>: ${text}
+      </p>
     `;
   });
 }
 
-function getMessages() {
+// GET request para checar os participantes ativos no chat
+function retrievePartcipants() {
+  axios.get(urlParticipants).then((res) => {});
+}
+
+// GET request para pegar as menssagens do servidor
+function retrieveMessages() {
   axios
     .get(urlMessages)
     .then(renderMessages)
-    .catch((err) => {});
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
-function enterChatRoom() {
-  axios
-    .post(urlParticipants, {
-      name: user,
-    })
-    .then(() => {
-      // Update Status every 5 secondes
-      setInterval(() => {
-        axios.post(urlStatus, {
-          name: user,
-        });
-      }, 5000);
-    })
-    .catch(enterChatRoom);
+// Enviando menssagem
+function sendMessage(isNewLogin) {
+  const content = isNewLogin
+    ? "Entra na sala..."
+    : document.querySelector("input").value;
 
-  getMessages();
-}
+  // Limpando o campo para digitar após a menssagem ser enviada
+  document.querySelector("input").value = "";
 
-function sendMessage() {
-  const content = document.querySelector("input").value;
-  console.log(content);
-  console.log(user);
   axios
-    .post(urlSendMessage, {
-      from: user,
+    .post(urlMessages, {
+      from: userName,
       to: "Todos",
       text: content,
       type: "message",
     })
-    .then((res) => console.log(res));
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err.response));
 }
+
+// Entrando no chat
+function enterChatRoom() {
+  axios
+    .post(urlParticipants, {
+      name: userName,
+    })
+    .then(() => {
+      // Menssagem de "entrou na sala" é enviada
+      sendMessage(true);
+    })
+    .catch((err) => {
+      console.log(err.response);
+      alert("Esse nome já está em uso, digite outro.");
+      window.location.reload();
+    });
+
+  retrieveMessages();
+}
+
+// Chamando a função para entrar no bate papo
+enterChatRoom();
+
+// Atualizando a lista de participantes e menssagens a cada 2s
+setInterval(() => {
+  retrievePartcipants();
+  retrieveMessages();
+}, 2000);
+
+// Mantendo a conexão, post request para o status
+setInterval(() => {
+  axios
+    .post(urlStatus, {
+      name: userName,
+    })
+    .catch((err) => {
+      console.log(err.response);
+    });
+}, 5000);
