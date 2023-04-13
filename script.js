@@ -1,5 +1,5 @@
 // Token HUB
-axios.defaults.headers.common["Authorization"] = "19bSCmBLbMRnsIejs68nlLxx";
+axios.defaults.headers.common["Authorization"] = "MZiKi14HUG2DFY3NTLY6O9Et";
 
 // URL's a serem utilizadas para as requesições
 const urlParticipants =
@@ -7,6 +7,7 @@ const urlParticipants =
 const urlMessages = "https://mock-api.driven.com.br/api/vm/uol/messages";
 const urlStatus = "https://mock-api.driven.com.br/api/vm/uol/status";
 
+// Elementos do DOM a serem utilizados:
 // Tela de login
 const loginScreen = document.querySelector(".login");
 // Input de login
@@ -19,18 +20,37 @@ const container = document.querySelector(".container");
 const hiddenMenu = document.querySelector(".menu");
 // Botão para fechar o menu dos usuários
 const closeMenu = document.querySelector("#close");
+// ---------------------------------------------------
+// Variáveis a serem usada:
 // Variável para o nome do usuário
 let userName;
-
+// Variável para o nome da pessoa a receber a mensagem
+let personName;
+// Variável para indicar se a mensagem é publica ou privada
+let messageVisibility;
 // ------------------------------------------------------
 // Funções criadas para as funcionalidades do projeto:
+
+// Selecionando se a mensagem é pública ou privada
+function messageType(visibility) {
+  visibility.querySelector(".check").classList.toggle("hidden");
+  switch (visibility.id) {
+    case "public":
+      messageVisibility = "message";
+      break;
+
+    case "private":
+      messageVisibility = "private_message";
+      break;
+  }
+}
 
 // Selecionando uma pessoa para mandar menssagem
 function selectedPerson(person) {
   // Salvando o nome da pessoa
-  const personName = person.querySelector("h2").textContent;
+  personName = person.querySelector("h2").textContent;
   // Adicionando ion-icon de check
-  person.querySelector(".hidden").classList.toggle("hidden");
+  person.querySelector(".check").classList.toggle("hidden");
 }
 
 // Renderizando os usuários online quando o menu é clicado
@@ -45,7 +65,7 @@ function renderPartcipants(users) {
       <li onclick="selectedPerson(this)">
         <ion-icon name="person-circle"></ion-icon>
         <h2>${user.name}</h2>
-        <ion-icon class="hidden" name="checkmark-circle"></ion-icon>
+        <ion-icon class="hidden check" name="checkmark-circle"></ion-icon>
       </li>
     `;
   });
@@ -67,9 +87,17 @@ function renderMessages(res) {
     const to = object.to;
     const text = object.text;
     const time = object.time;
+    const type = object.type;
+
+    const backgroundColor =
+      type === "status"
+        ? "#DCDCDC"
+        : type === "private_message"
+        ? "#FFDEDE"
+        : "#FFF";
 
     container.innerHTML += `      
-      <p>
+      <p style="background-color: ${backgroundColor}">
         <span class="time">(${time})</span> <strong>${from}</strong> 
           para <strong>${to}</strong>: ${text}
       </p>
@@ -99,9 +127,9 @@ function sendMessage() {
 
   const data = {
     from: userName,
-    to: "Todos",
+    to: personName != undefined ? personName : "Todos",
     text: messageContent,
-    type: "message",
+    type: messageVisibility != undefined ? messageVisibility : "message",
   };
 
   // Limpando o campo para digitar após a menssagem ser enviada
@@ -144,7 +172,7 @@ function enterChatRoom() {
       // Atualizando a lista de menssagens a cada 2s
       setInterval(() => {
         retrieveMessages();
-      }, 2000);
+      }, 3000);
     })
     .catch(() => {
       alert("Esse nome já está em uso, digite outro.");

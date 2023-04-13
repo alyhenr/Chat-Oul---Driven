@@ -120,9 +120,12 @@ header>ion-icon {
 }
 
 .container p {
-    margin: 1px 0;
-    padding: 5px;
+    min-height: 45px;
+
+    padding: 6px;
     background-color: white;
+    word-break: break-all;
+    overflow-y: hidden;
 }
 
 /* Input field for messages */
@@ -222,11 +225,16 @@ ion-icon:hover {
 
 .person li {
     display: flex;
+
+    position: relative;
+
     gap: 12px;
 }
 
-.person ion-icon:nth-child(2) {
-    margin-left: 50px;
+.person .check {
+    position: absolute;
+    top: -3px;
+    right: -30px;
 }
 
 .hidden {

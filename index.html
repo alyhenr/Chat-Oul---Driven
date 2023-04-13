@@ -16,7 +16,7 @@
     <body>
         <div class="login">
             <img src="./assets/logo 2.png" alt="">
-            <input type="text" placeholder="Digite seu nome">
+            <input type="text" placeholder="Digite seu nome" autofocus>
             <button disabled>Entrar</button>
         </div>
         <header>
@@ -45,13 +45,15 @@
                 </div>
             </div>
             <h1>Escolha a visibilidade:</h1>
-            <div class="public">
+            <div onclick="messageType(this)" id="public">
                 <ion-icon name="lock-open"></ion-icon>
                 <h2>Público</h2>
+                <ion-icon class="hidden check" name="checkmark-circle"></ion-icon>
             </div>
-            <div class="private">
+            <div onclick="messageType(this)" id="private">
                 <ion-icon name="lock-closed"></ion-icon>
                 <h2>Reservadamente</h2>
+                <ion-icon class="hidden check" name="checkmark-circle"></ion-icon>
             </div>
         </div>
 
