@@ -174,7 +174,7 @@ function enterChatRoom() {
           .post(urlStatus, {
             name: userName,
           })
-          .then((res) => console.log(res));
+          .catch(() => window.location.reload());
       }, 5000);
 
       // Atualizando a lista de menssagens a cada 2s
