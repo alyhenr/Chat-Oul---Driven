@@ -10,10 +10,15 @@
         <!-- CSS -->
         <link rel="stylesheet" href="styles.css">
 
-        <title>ChatUOL-AlyssonHenrique</title>
+        <title>Bate Papo UOL</title>
     </head>
 
     <body>
+        <div class="login">
+            <img src="./assets/logo 2.png" alt="">
+            <input type="text" placeholder="Digite seu nome">
+            <button disabled>Entrar</button>
+        </div>
         <header>
             <img src="./assets/logo 1.png" alt="logo">
             <ion-icon onclick="retrievePartcipants()" name="people"></ion-icon>
@@ -21,12 +26,13 @@
         <div class="container">
         </div>
         <footer>
-            <input type="text" placeholder="Escreva aqui...">
+            <input id="message" type="text" placeholder="Escreva aqui...">
             <ion-icon onclick="sendMessage()" name="paper-plane-outline"></ion-icon>
         </footer>
 
         <!-- Hidden menu -->
         <div class="menu hidden">
+            <ion-icon id="close" name="close-outline"></ion-icon>
             <h1>Escolha um contato para enviar menssagem:</h1>
             <div class="everyone">
                 <ion-icon name="people"></ion-icon>

@@ -1,5 +1,5 @@
 // Token HUB
-axios.defaults.headers.common["Authorization"] = "UdTri9RJtgkvEKKKOxYYRVs2";
+axios.defaults.headers.common["Authorization"] = "19bSCmBLbMRnsIejs68nlLxx";
 
 // URL's a serem utilizadas para as requesições
 const urlParticipants =
@@ -7,12 +7,23 @@ const urlParticipants =
 const urlMessages = "https://mock-api.driven.com.br/api/vm/uol/messages";
 const urlStatus = "https://mock-api.driven.com.br/api/vm/uol/status";
 
+// Tela de login
+const loginScreen = document.querySelector(".login");
+// Input de login
+const login = document.querySelector(".login input");
+// Botão de login
+const btnLogin = document.querySelector(".login button");
 // Armazenando o container html onde as menssagens serão renderizadas
 const container = document.querySelector(".container");
 // Menu com usuários online
 const hiddenMenu = document.querySelector(".menu");
+// Botão para fechar o menu dos usuários
+const closeMenu = document.querySelector("#close");
+// Variável para o nome do usuário
+let userName;
 
-const userName = prompt("Digite seu nome");
+// ------------------------------------------------------
+// Funções criadas para as funcionalidades do projeto:
 
 // Selecionando uma pessoa para mandar menssagem
 function selectedPerson(person) {
@@ -80,7 +91,8 @@ function retrieveMessages() {
 
 // Enviando menssagem
 function sendMessage() {
-  const messageContent = document.querySelector("input").value;
+  const messageContent = document.querySelector("#message").value;
+
   if (messageContent == "") {
     return;
   }
@@ -93,7 +105,7 @@ function sendMessage() {
   };
 
   // Limpando o campo para digitar após a menssagem ser enviada
-  document.querySelector("input").value = "";
+  document.querySelector("#message").value = "";
 
   axios
     .post(urlMessages, data)
@@ -112,6 +124,13 @@ function enterChatRoom() {
     .then(() => {
       // Fazendo um get request para renderizar as menssagens imediatament após entrar na sala
       retrieveMessages();
+
+      // Adicionando o event listener para a tecla enter enviar mensagens também
+      document.querySelector("#message").addEventListener("keypress", (ev) => {
+        if (ev.key === "Enter" && ev.currentTarget.value != "") {
+          sendMessage();
+        }
+      });
 
       // Mantendo a conexão a cada 5s, post request para url de status
       setInterval(() => {
@@ -133,5 +152,29 @@ function enterChatRoom() {
     });
 }
 
-// Chamando a função para entrar no bate papo
-enterChatRoom();
+// Inicializando os eventos para o login do usuários
+login.addEventListener("keypress", (ev) => {
+  // O botão de login é liberado quando a pessoa digita algum nome
+  btnLogin.disabled = false;
+  // Habilitando a escolha do nome para a tecla "Enter"
+  if (ev.key === "Enter" && login.value != "") {
+    userName = login.value;
+    loginScreen.classList.add("hidden");
+    // Chamando a função para entrar no bate papo
+    enterChatRoom(userName);
+  }
+});
+
+btnLogin.addEventListener("click", () => {
+  if (login.value != "") {
+    userName = login.value;
+    loginScreen.classList.add("hidden");
+    // Chamando a função para entrar no bate papo
+    enterChatRoom(userName);
+  }
+});
+
+// Botão para fechar o menu com os usuários online, quando aberto
+closeMenu.addEventListener("click", () => {
+  hiddenMenu.classList.add("hidden");
+});

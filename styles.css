@@ -22,6 +22,58 @@ body {
     border-radius: 5px;
 }
 
+/* Tela de login */
+.login {
+    display: flex;
+    flex-direction: column;
+
+    position: fixed;
+    z-index: 10;
+
+    width: 375px;
+    height: 1667px;
+
+    background: linear-gradient(#e66465, #9198e5);
+}
+
+.login img {
+    width: 130px;
+    height: 92px;
+
+    margin: 72px auto 95px;
+}
+
+.login input {
+    width: 85%;
+    height: 50px;
+
+    z-index: 11;
+
+    background-color: #FFFFFF;
+    margin: 5px auto;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 5px 5px 10px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.login button {
+    width: 109px;
+    height: 45px;
+
+    margin: 25px auto 0px;
+
+    border: none;
+    border-radius: 5px;
+}
+
+.login button:hover {
+    cursor: pointer;
+    scale: 1.02;
+    opacity: 0.7;
+}
+
 /* Header */
 header {
     display: flex;
@@ -71,7 +123,6 @@ header>ion-icon {
     margin: 1px 0;
     padding: 5px;
     background-color: white;
-
 }
 
 /* Input field for messages */
@@ -90,6 +141,12 @@ footer>input {
 footer>ion-icon {
     width: 26px;
     height: 26px;
+}
+
+ion-icon:hover {
+    cursor: pointer;
+
+    scale: 1.05;
 }
 
 /* Hidden menu */
@@ -114,6 +171,14 @@ footer>ion-icon {
     justify-content: flex-start;
     align-items: flex-start;
     gap: 10px;
+}
+
+#close {
+    width: 32px;
+    height: 32px;
+
+    margin-bottom: -40px;
+    place-self: end;
 }
 
 .menu>h1 {
