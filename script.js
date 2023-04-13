@@ -33,7 +33,10 @@ let messageVisibility;
 
 // Selecionando se a mensagem é pública ou privada
 function messageType(visibility) {
-  visibility.querySelector(".check").classList.toggle("hidden");
+  document.querySelectorAll(".visibility").forEach((div) => {
+    div.querySelector(".check").classList.add("hidden");
+  });
+  visibility.querySelector(".check").classList.remove("hidden");
   switch (visibility.id) {
     case "public":
       messageVisibility = "message";
@@ -47,10 +50,13 @@ function messageType(visibility) {
 
 // Selecionando uma pessoa para mandar menssagem
 function selectedPerson(person) {
+  hiddenMenu.querySelectorAll(".online-users .person").forEach((user) => {
+    user.querySelector(".check").classList.add("hidden");
+  });
   // Salvando o nome da pessoa
   personName = person.querySelector("h2").textContent;
   // Adicionando ion-icon de check
-  person.querySelector(".check").classList.toggle("hidden");
+  person.querySelector(".check").classList.remove("hidden");
 }
 
 // Renderizando os usuários online quando o menu é clicado
@@ -62,10 +68,10 @@ function renderPartcipants(users) {
   // Renderizando no HTML
   users.forEach((user) => {
     person.innerHTML += `
-      <li onclick="selectedPerson(this)">
+      <li data-test="participant" onclick="selectedPerson(this)">
         <ion-icon name="person-circle"></ion-icon>
         <h2>${user.name}</h2>
-        <ion-icon class="hidden check" name="checkmark-circle"></ion-icon>
+        <ion-icon data-test="check" class="hidden check" name="checkmark-circle"></ion-icon>
       </li>
     `;
   });
@@ -96,11 +102,13 @@ function renderMessages(res) {
         ? "#FFDEDE"
         : "#FFF";
 
-    container.innerHTML += `      
-      <p style="background-color: ${backgroundColor}">
-        <span class="time">(${time})</span> <strong>${from}</strong> 
-          para <strong>${to}</strong>: ${text}
-      </p>
+    container.innerHTML += `
+      <div data-test="message">
+        <p style="background-color: ${backgroundColor}">
+          <span class="time">(${time})</span> <strong>${from}</strong> 
+            para <strong>${to}</strong>: ${text}
+        </p>
+      </div>
     `;
 
     container.scroll(0, 50000);

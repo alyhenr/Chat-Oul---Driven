@@ -14,29 +14,32 @@
     </head>
 
     <body>
+        <!-- Tela de login -->
         <div class="login">
             <img src="./assets/logo 2.png" alt="">
             <input type="text" placeholder="Digite seu nome" autofocus>
             <button disabled>Entrar</button>
         </div>
+        <!-- Bate papo -->
         <header>
             <img src="./assets/logo 1.png" alt="logo">
-            <ion-icon onclick="retrievePartcipants()" name="people"></ion-icon>
+            <ion-icon data-test="open-participants" onclick="retrievePartcipants()" name="people"></ion-icon>
         </header>
         <div class="container">
         </div>
         <footer>
-            <input id="message" type="text" placeholder="Escreva aqui...">
-            <ion-icon onclick="sendMessage()" name="paper-plane-outline"></ion-icon>
+            <input data-test="input-message" id="message" type="text" placeholder="Escreva aqui...">
+            <ion-icon data-test="send-message" onclick="sendMessage()" name="paper-plane-outline"></ion-icon>
         </footer>
 
         <!-- Hidden menu -->
-        <div class="menu hidden">
+        <div data-test="overlay" class="menu hidden">
             <ion-icon id="close" name="close-outline"></ion-icon>
             <h1>Escolha um contato para enviar menssagem:</h1>
-            <div class="everyone">
+            <div data-test="all" onclick="selectedPerson(this)" class="everyone">
                 <ion-icon name="people"></ion-icon>
                 <h2>Todos</h2>
+                <ion-icon data-test="check" class="hidden check" name="checkmark-circle"></ion-icon>
             </div>
             <div class="online-users">
                 <div>
@@ -45,15 +48,15 @@
                 </div>
             </div>
             <h1>Escolha a visibilidade:</h1>
-            <div onclick="messageType(this)" id="public">
+            <div data-test="public" onclick="messageType(this)" id="public" class="visibility">
                 <ion-icon name="lock-open"></ion-icon>
                 <h2>Público</h2>
-                <ion-icon class="hidden check" name="checkmark-circle"></ion-icon>
+                <ion-icon data-test="check" class="hidden check" name="checkmark-circle"></ion-icon>
             </div>
-            <div onclick="messageType(this)" id="private">
+            <div data-test="private" onclick="messageType(this)" id="private" class="visibility">
                 <ion-icon name="lock-closed"></ion-icon>
                 <h2>Reservadamente</h2>
-                <ion-icon class="hidden check" name="checkmark-circle"></ion-icon>
+                <ion-icon data-test="check" class="hidden check" name="checkmark-circle"></ion-icon>
             </div>
         </div>
 

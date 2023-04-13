@@ -184,6 +184,10 @@ ion-icon:hover {
     place-self: end;
 }
 
+.online-users {
+    overflow-y: scroll;
+}
+
 .menu>h1 {
     font-family: 'Roboto';
     font-style: normal;
@@ -225,17 +229,14 @@ ion-icon:hover {
 
 .person li {
     display: flex;
-
-    position: relative;
-
     gap: 12px;
 }
 
-.person .check {
+/* .person .check {
     position: absolute;
     top: -3px;
-    right: -30px;
-}
+    right: -20px;
+} */
 
 .hidden {
     display: none;
