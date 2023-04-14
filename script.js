@@ -143,7 +143,12 @@ function retrieveMessages() {
     .then((res) => {
       // Filtrando menssagems que são públicas ou privadas para o usuário em questão
       const filteredMessages = res.data.filter((message) => {
-        return message.from === userName || message.type === "message";
+        return (
+          message.from === userName ||
+          message.to === "Todos" ||
+          message.to === userName ||
+          message.type === "message"
+        );
       });
       renderMessages(filteredMessages);
     })
