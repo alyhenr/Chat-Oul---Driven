@@ -140,14 +140,14 @@ function retrieveMessages() {
     .get(urlMessages)
     .then((res) => {
       // Filtrando menssagems que são reservadas para outros usuaŕios
-      const filteredMessages = res.data.filter((message) => {
-        if (message.type === "private_message") {
-          if (message.from !== userName && message.to !== userName)
-            return false;
-        }
-        return true;
-      });
-      renderMessages(filteredMessages);
+      // const filteredMessages = res.data.filter((message) => {
+      //   if (message.type === "private_message") {
+      //     if (message.from !== userName && message.to !== userName)
+      //       return false;
+      //   }
+      //   return true;
+      // });
+      renderMessages(res.data);
     })
     .catch(() => {
       alert("Erro ao carregar as mensagems, entre novamente no bate papo.");
@@ -242,7 +242,7 @@ function enterChatRoom() {
         // Atualizando a lista de participantes a cada 10s
         setInterval(() => {
           retrievePartcipants();
-        }, 1000);
+        }, 10000);
       })
       .catch(() => {
         alert("Erro ao entrar na sala, tente novamente.");
