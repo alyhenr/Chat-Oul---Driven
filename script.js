@@ -174,11 +174,19 @@ function sendMessage() {
   // Limpando o input de digitar após a menssagem ser enviada
   document.querySelector("#message").value = "";
 
-  //Verificando se o destinatário ainda está online:
   axios.get(urlParticipants).then((res) => {
+    // 1.
+    // Verifica se o usuário ainda está conectado na sala
+    // (em caso de ficar usando outra aba e deixar o chat aberto,
+    //   o chat continua aparacendo mas a conexão é perdido e o post na url
+    //   de estatus retorna status code 400 (Bad Request))
+    if (!res.data.map((user) => user.name).includes(userName)) {
+      window.location.reload();
+    }
+    //  2.
+    // Verifica se o destinatáio ainda está online:
     if (personName != "Todos") {
       if (!res.data.map((user) => user.name).includes(personName)) {
-        // alert("Esta usuário está offline!");
         window.location.reload();
       }
     }
@@ -268,17 +276,19 @@ btnLogin.addEventListener("click", () => {
 // -----------------------------------------------
 // Menu lateral:
 // Botão para fechar o menu com os usuários online, quando aberto
-closeMenu.addEventListener("click", () => {
-  hiddenMenu.classList.add("hidden");
-  overlay.classList.add("hidden");
+// (para o ion-icon x e o overlay)
+[closeMenu, overlay].forEach((element) => {
+  element.addEventListener("click", () => {
+    hiddenMenu.classList.add("hidden");
 
-  // Se ao fechar o menu lateral uma pessoa tiver sido selecionada
-  // para receber a mensagem, isso fica indicado no placholder do input de mensagem
-  if (personName != "Todos") {
-    document.querySelector("#message").placeholder = `Escreva aqui
-    Enviando para ${personName} (${
-      messageVisibility === "message" ? "publicamente" : "reservadamente"
-    })
-    `;
-  }
+    // Se ao fechar o menu lateral uma pessoa tiver sido selecionada
+    // para receber a mensagem, isso fica indicado no placholder do input de mensagem
+    if (personName != "Todos") {
+      document.querySelector("#message").placeholder = `Escreva aqui
+        Enviando para ${personName} (${
+        messageVisibility === "message" ? "publicamente" : "reservadamente"
+      })
+        `;
+    }
+  });
 });
