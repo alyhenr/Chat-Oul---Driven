@@ -74,6 +74,65 @@ body {
     opacity: 0.7;
 }
 
+/* Tela de carregamento */
+.loading-screen {
+    position: fixed;
+    z-index: 10;
+
+    width: 375px;
+    height: 100%;
+
+    margin: 0 auto;
+    background: linear-gradient(#9198e5, #d04c4c);
+}
+
+.loader {
+    position: fixed;
+
+    top: 350px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid #3498db;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-screen h1 {
+    text-align: center;
+    margin: 200px auto;
+
+    font-size: large;
+
+    animation: grow 2s linear infinite;
+}
+
+@keyframes grow {
+    from {
+        scale: 1;
+        opacity: 0.5;
+    }
+
+    to {
+        scale: 1.7;
+        opacity: 1;
+    }
+}
+
 /* Header */
 header {
     display: flex;
@@ -90,8 +149,10 @@ header {
     height: 80px;
 
     background: #FFFFFF;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 10px 6px rgba(0, 0, 0, 0.05);
     padding: 16px 22px;
+    border: 2px solid #f3f3f3;
+    border-radius: 7px;
 }
 
 header>img {
@@ -139,6 +200,8 @@ footer {
     height: 80px;
 
     padding: 0 25px;
+    border: solid 2px #f3f3f3;
+    border-radius: 7px;
 }
 
 footer>input {
@@ -237,6 +300,10 @@ ion-icon:hover {
     overflow-y: scroll;
 }
 
+.online-users>div {
+    width: 100%;
+}
+
 .menu>h1 {
     font-family: 'Roboto';
     font-style: normal;
@@ -276,6 +343,10 @@ ion-icon:hover {
     gap: 5px
 }
 
+.menu ul {
+    width: 100%;
+}
+
 .person li {
     display: flex;
     gap: 12px;
@@ -283,4 +354,22 @@ ion-icon:hover {
 
 .hidden {
     display: none;
+}
+
+/* Custom ScrollBar */
+/* width */
+::-webkit-scrollbar {
+    width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #9198e5;
+    border-radius: 10px;
 }
