@@ -107,7 +107,7 @@ function retrievePartcipants() {
 // Renderizando as menssagens no container html
 function renderMessages(res) {
   container.innerHTML = "";
-  res.forEach((object) => {
+  res.forEach((object, i) => {
     const { from } = object;
     const { to } = object;
     const { text } = object;
@@ -122,16 +122,16 @@ function renderMessages(res) {
         : "#FFF";
 
     container.innerHTML += `
-      <div data-test="message">
+      <div data-test="message" id="m-${i + 1}">
         <p style="background-color: ${backgroundColor}">
           <span class="time">(${time})</span> <strong>${from}</strong> 
             para <strong>${to}</strong>: ${text}
         </p>
       </div>
     `;
-
-    container.scroll(0, 50000);
   });
+  // Scroll para a ultima mensagem renderizada
+  container.querySelector(`#m-${res.length}`).scrollIntoView();
 }
 
 // GET request para pegar as menssagens do servidor
@@ -140,14 +140,14 @@ function retrieveMessages() {
     .get(urlMessages)
     .then((res) => {
       // Filtrando menssagems que são reservadas para outros usuaŕios
-      // const filteredMessages = res.data.filter((message) => {
-      //   if (message.type === "private_message") {
-      //     if (message.from !== userName && message.to !== userName)
-      //       return false;
-      //   }
-      //   return true;
-      // });
-      renderMessages(res.data);
+      const filteredMessages = res.data.filter((message) => {
+        if (message.type === "private_message") {
+          if (message.from !== userName && message.to !== userName)
+            return false;
+        }
+        return true;
+      });
+      renderMessages(filteredMessages);
     })
     .catch(() => {
       alert("Erro ao carregar as mensagems, entre novamente no bate papo.");
@@ -180,12 +180,14 @@ function sendMessage() {
     //   o chat continua aparacendo mas a conexão é perdido e o post na url
     //   de estatus retorna status code 400 (Bad Request))
     if (!res.data.map((user) => user.name).includes(userName)) {
+      alert("Reconecte-se na sala.");
       window.location.reload();
     }
     //  2.
     // Verifica se o destinatáio ainda está online:
     if (personName != "Todos") {
       if (!res.data.map((user) => user.name).includes(personName)) {
+        alert("Esse usuário não está mais online...");
         window.location.reload();
       }
     }
