@@ -150,7 +150,7 @@ function retrieveMessages() {
           message.type === "message"
         );
       });
-      renderMessages(filteredMessages);
+      renderMessages(res.data);
     })
     .catch((err) => {
       console.log(err);
