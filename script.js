@@ -143,11 +143,7 @@ function retrieveMessages() {
     .then((res) => {
       // Filtrando menssagems que são públicas ou privadas para o usuário em questão
       const filteredMessages = res.data.filter((message) => {
-        return (
-          message.to === "Todos" ||
-          message.to === userName ||
-          message.from === userName
-        );
+        return message.from === userName || message.type === "message";
       });
       renderMessages(filteredMessages);
     })
@@ -239,7 +235,7 @@ login.addEventListener("keypress", (ev) => {
     userName = login.value;
     loginScreen.classList.add("hidden");
     // Chamando a função para entrar no bate papo
-    enterChatRoom(userName);
+    enterChatRoom();
   }
 });
 
@@ -248,7 +244,7 @@ btnLogin.addEventListener("click", () => {
     userName = login.value;
     loginScreen.classList.add("hidden");
     // Chamando a função para entrar no bate papo
-    enterChatRoom(userName);
+    enterChatRoom();
   }
 });
 
