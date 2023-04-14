@@ -133,12 +133,23 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px;
+
+    height: 80px;
+
+    padding: 0 25px;
 }
 
 footer>input {
+    min-height: 50px;
+    margin-left: -10px;
+
     border: none;
     outline: none;
+
+}
+
+footer>input::placeholder {
+    word-break: break-all;
 }
 
 footer>ion-icon {
@@ -165,6 +176,7 @@ ion-icon:hover {
 
     opacity: 0.3;
     background-color: rgba(0, 0, 0, 0.6);
+    opacity: 0.6;
 }
 
 .menu {

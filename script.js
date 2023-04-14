@@ -1,5 +1,5 @@
 // Token HUB
-axios.defaults.headers.common["Authorization"] = "qxYLlLlIlhuOqs7lsSJlVf0V";
+axios.defaults.headers.common["Authorization"] = "FmwapjukXtQjz0rEIouU5AMC";
 
 // URL's a serem utilizadas para as requesições
 const urlParticipants =
@@ -27,7 +27,7 @@ const overlay = document.querySelector(".overlay");
 // Variável para o nome do usuário
 let userName;
 // Variável para o nome da pessoa a receber a mensagem
-let personName;
+let personName = "Todos";
 // Variável para indicar se a mensagem é publica ou privada
 let messageVisibility;
 // ------------------------------------------------------
@@ -91,19 +91,17 @@ function renderPartcipants(users) {
 
 // GET request para checar os participantes ativos no chat
 function retrievePartcipants() {
-  axios
-    .get(urlParticipants)
-    .then((res) => {
-      const users = res.data;
+  if (arguments.length > 0) {
+    if (arguments[0].name === "people") {
+      hiddenMenu.classList.remove("hidden");
+    }
+  }
+  axios.get(urlParticipants).then((res) => {
+    const users = res.data;
+    if (!hiddenMenu.classList.contains("hidden")) {
       renderPartcipants(users);
-    })
-    .then(() => {
-      overlay.classList.remove("hidden");
-      overlay.addEventListener("click", () => {
-        overlay.classList.add("hidden");
-        hiddenMenu.classList.add("hidden");
-      });
-    });
+    }
+  });
 }
 
 // Renderizando as menssagens no container html
@@ -142,18 +140,19 @@ function retrieveMessages() {
     .get(urlMessages)
     .then((res) => {
       // Filtrando menssagems que são públicas ou privadas para o usuário em questão
-      const filteredMessages = res.data.filter((message) => {
-        return (
-          message.from === userName ||
-          message.to === "Todos" ||
-          message.to === userName ||
-          message.type === "message"
-        );
-      });
+      // const filteredMessages = res.data.filter((message) => {
+      //   return (
+      //     message.from === userName ||
+      //     message.to === "Todos" ||
+      //     message.to === userName ||
+      //     message.type === "message"
+      //   );
+      // });
       renderMessages(res.data);
     })
     .catch((err) => {
-      console.log(err);
+      alert("Erro ao carregar as mensagems, entre novamente no bate papo.");
+      window.location.reload();
     });
 }
 
@@ -167,12 +166,12 @@ function sendMessage() {
 
   const data = {
     from: userName,
-    to: personName != undefined ? personName : "Todos",
+    to: personName != "Todos" ? personName : "Todos",
     text: messageContent,
     type: messageVisibility != undefined ? messageVisibility : "message",
   };
 
-  // Limpando o campo para digitar após a menssagem ser enviada
+  // Limpando o input de digitar após a menssagem ser enviada
   document.querySelector("#message").value = "";
 
   //Verificando se o destinatário ainda está online:
@@ -196,42 +195,56 @@ function sendMessage() {
 
 // Entrando no chat
 function enterChatRoom() {
-  axios
-    .post(urlParticipants, {
-      name: userName,
-    })
-    .then(() => {
-      // Fazendo um get request para renderizar as menssagens imediatament após entrar na sala
-      retrieveMessages();
-
-      // Adicionando o event listener para a tecla enter enviar mensagens também
-      document.querySelector("#message").addEventListener("keypress", (ev) => {
-        if (ev.key === "Enter" && ev.currentTarget.value != "") {
-          sendMessage();
-        }
-      });
-
-      // Mantendo a conexão a cada 5s, post request para url de status
-      setInterval(() => {
-        axios
-          .post(urlStatus, {
-            name: userName,
-          })
-          .catch(() => window.location.reload());
-      }, 5000);
-
-      // Atualizando a lista de menssagens a cada 2s
-      setInterval(() => {
-        retrieveMessages();
-      }, 3000);
-    })
-    .catch(() => {
-      alert("Esse nome já está em uso, digite outro.");
+  axios.get(urlParticipants).then((res) => {
+    if (res.data.map((user) => user.name).includes(userName)) {
+      alert("Esse nome já está em uso, escolha outro.");
       window.location.reload();
-    });
+    }
+    // Se nenhum usuário tem o mesmo nome, procede...
+    axios
+      .post(urlParticipants, {
+        name: userName,
+      })
+      .then(() => {
+        // Fazendo um get request para renderizar as menssagens imediatament após entrar na sala
+        retrieveMessages();
+
+        // Adicionando o event listener para a tecla enter enviar mensagens também
+        document
+          .querySelector("#message")
+          .addEventListener("keypress", (ev) => {
+            if (ev.key === "Enter" && ev.currentTarget.value != "") {
+              sendMessage();
+            }
+          });
+
+        // Mantendo a conexão a cada 5s, post request para url de status
+        setInterval(() => {
+          axios
+            .post(urlStatus, {
+              name: userName,
+            })
+            .catch(() => window.location.reload());
+        }, 5000);
+
+        // Atualizando a lista de menssagens a cada 2s
+        setInterval(() => {
+          retrieveMessages();
+        }, 3000);
+
+        // Atualizando a lista de participantes a cada 10s
+        setInterval(() => {
+          retrievePartcipants();
+        }, 10000);
+      })
+      .catch(() => {
+        alert("Erro ao entrar na sala, tente novamente.");
+        window.location.reload();
+      });
+  });
 }
 
-// Inicializando os eventos para o login do usuários
+// Inicializando os eventos para o login do usuários:
 login.addEventListener("keypress", (ev) => {
   // O botão de login é liberado quando a pessoa digita algum nome
   btnLogin.disabled = false;
@@ -243,7 +256,7 @@ login.addEventListener("keypress", (ev) => {
     enterChatRoom();
   }
 });
-
+// Botão de login
 btnLogin.addEventListener("click", () => {
   if (login.value != "") {
     userName = login.value;
@@ -252,9 +265,20 @@ btnLogin.addEventListener("click", () => {
     enterChatRoom();
   }
 });
-
+// -----------------------------------------------
+// Menu lateral:
 // Botão para fechar o menu com os usuários online, quando aberto
 closeMenu.addEventListener("click", () => {
   hiddenMenu.classList.add("hidden");
   overlay.classList.add("hidden");
+
+  // Se ao fechar o menu lateral uma pessoa tiver sido selecionada
+  // para receber a mensagem, isso fica indicado no placholder do input de mensagem
+  if (personName != "Todos") {
+    document.querySelector("#message").placeholder = `Escreva aqui
+    Enviando para ${personName} (${
+      messageVisibility === "message" ? "publicamente" : "reservadamente"
+    })
+    `;
+  }
 });
