@@ -140,14 +140,14 @@ function retrieveMessages() {
     .get(urlMessages)
     .then((res) => {
       // Filtrando menssagems que são reservadas para outros usuaŕios
-      const filteredMessages = res.data.filter((message) => {
-        if (message.type === "private_message") {
-          if (message.from !== userName && message.to !== userName)
-            return false;
-        }
-        return true;
-      });
-      renderMessages(filteredMessages);
+      // const filteredMessages = res.data.filter((message) => {
+      //   if (message.type === "private_message") {
+      //     if (message.from !== userName && message.to !== userName)
+      //       return false;
+      //   }
+      //   return true;
+      // });
+      renderMessages(res.data);
     })
     .catch(() => {
       alert("Erro ao carregar as mensagems, entre novamente no bate papo.");
@@ -204,53 +204,40 @@ function sendMessage() {
 
 // Entrando no chat
 function enterChatRoom() {
-  axios.get(urlParticipants).then((res) => {
-    if (res.data.map((user) => user.name).includes(userName)) {
-      alert("Esse nome já está em uso, escolha outro.");
-      window.location.reload();
-    }
-    // Se nenhum usuário tem o mesmo nome, procede...
-    axios
-      .post(urlParticipants, {
-        name: userName,
-      })
-      .then(() => {
-        // Fazendo um get request para renderizar as menssagens imediatament após entrar na sala
-        retrieveMessages();
-
-        // Adicionando o event listener para a tecla enter enviar mensagens também
-        document
-          .querySelector("#message")
-          .addEventListener("keypress", (ev) => {
-            if (ev.key === "Enter" && ev.currentTarget.value != "") {
-              sendMessage();
-            }
-          });
-
-        // Mantendo a conexão a cada 5s, post request para url de status
-        setInterval(() => {
-          axios
-            .post(urlStatus, {
-              name: userName,
-            })
-            .catch(() => window.location.reload());
-        }, 5000);
-
-        // Atualizando a lista de menssagens a cada 2s
-        setInterval(() => {
-          retrieveMessages();
-        }, 2000);
-
-        // Atualizando a lista de participantes a cada 10s
-        setInterval(() => {
-          retrievePartcipants();
-        }, 10000);
-      })
-      .catch(() => {
-        alert("Erro ao entrar na sala, tente novamente.");
-        window.location.reload();
+  axios
+    .post(urlParticipants, {
+      name: userName,
+    })
+    .then(() => {
+      // Fazendo um get request para renderizar as menssagens imediatament após entrar na sala
+      retrieveMessages();
+      // Adicionando o event listener para a tecla enter enviar mensagens também
+      document.querySelector("#message").addEventListener("keypress", (ev) => {
+        if (ev.key === "Enter" && ev.currentTarget.value != "") {
+          sendMessage();
+        }
       });
-  });
+      // Mantendo a conexão a cada 5s, post request para url de status
+      setInterval(() => {
+        axios
+          .post(urlStatus, {
+            name: userName,
+          })
+          .catch(() => window.location.reload());
+      }, 5000);
+      // Atualizando a lista de menssagens a cada 3s
+      setInterval(() => {
+        retrieveMessages();
+      }, 2000);
+      // Atualizando a lista de participantes a cada 10s
+      setInterval(() => {
+        retrievePartcipants();
+      }, 10000);
+    })
+    .catch(() => {
+      // Recarrega página em caso de erro
+      window.location.reload();
+    });
 }
 
 // Inicializando os eventos para o login do usuários:
