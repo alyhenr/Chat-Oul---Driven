@@ -272,11 +272,12 @@ btnLogin.addEventListener("click", () => {
     // Se ao fechar o menu lateral uma pessoa tiver sido selecionada
     // para receber a mensagem, isso fica indicado no placholder do input de mensagem
     if (personName != "Todos") {
-      document.querySelector("#message").placeholder = `Escreva aqui
-        Enviando para ${personName} (${
-        messageVisibility === "message" ? "publicamente" : "reservadamente"
-      })
-        `;
+      document.querySelector(".recipient").innerHTML = `
+        <h6>Enviando para ${personName} 
+        (${
+          messageVisibility === "message" ? "publicamente" : "reservadamente"
+        })</h6>
+      `;
     }
   });
 });
