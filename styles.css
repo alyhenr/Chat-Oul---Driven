@@ -153,10 +153,27 @@ ion-icon:hover {
 }
 
 /* Hidden menu */
+.overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    margin: 0 auto;
+
+    width: 375px;
+    height: 667px;
+
+    z-index: 5;
+
+    opacity: 0.3;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
 .menu {
     display: flex;
     flex-direction: column;
 
+    z-index: 10;
 
     position: absolute;
     top: 0;
@@ -175,6 +192,7 @@ ion-icon:hover {
     align-items: flex-start;
     gap: 10px;
 }
+
 
 #close {
     width: 32px;
@@ -231,12 +249,6 @@ ion-icon:hover {
     display: flex;
     gap: 12px;
 }
-
-/* .person .check {
-    position: absolute;
-    top: -3px;
-    right: -20px;
-} */
 
 .hidden {
     display: none;

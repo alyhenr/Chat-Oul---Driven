@@ -1,5 +1,5 @@
 // Token HUB
-axios.defaults.headers.common["Authorization"] = "MZiKi14HUG2DFY3NTLY6O9Et";
+axios.defaults.headers.common["Authorization"] = "qxYLlLlIlhuOqs7lsSJlVf0V";
 
 // URL's a serem utilizadas para as requesições
 const urlParticipants =
@@ -20,6 +20,8 @@ const container = document.querySelector(".container");
 const hiddenMenu = document.querySelector(".menu");
 // Botão para fechar o menu dos usuários
 const closeMenu = document.querySelector("#close");
+// Overlay para fechar o menu dos usuários também
+const overlay = document.querySelector(".overlay");
 // ---------------------------------------------------
 // Variáveis a serem usada:
 // Variável para o nome do usuário
@@ -45,14 +47,24 @@ function messageType(visibility) {
     case "private":
       messageVisibility = "private_message";
       break;
+
+    default:
+      messageVisibility = "status";
+      break;
   }
 }
 
 // Selecionando uma pessoa para mandar menssagem
 function selectedPerson(person) {
-  hiddenMenu.querySelectorAll(".online-users .person").forEach((user) => {
-    user.querySelector(".check").classList.add("hidden");
-  });
+  const everyone = document.querySelector(".everyone");
+  if (person != everyone) {
+    everyone.querySelector('[data-test="check"]').classList.add("hidden");
+  }
+  document
+    .querySelectorAll('.online-users [data-test="check"]')
+    .forEach((user) => {
+      user.classList.add("hidden");
+    });
   // Salvando o nome da pessoa
   personName = person.querySelector("h2").textContent;
   // Adicionando ion-icon de check
@@ -79,21 +91,30 @@ function renderPartcipants(users) {
 
 // GET request para checar os participantes ativos no chat
 function retrievePartcipants() {
-  axios.get(urlParticipants).then((res) => {
-    const users = res.data;
-    renderPartcipants(users);
-  });
+  axios
+    .get(urlParticipants)
+    .then((res) => {
+      const users = res.data;
+      renderPartcipants(users);
+    })
+    .then(() => {
+      overlay.classList.remove("hidden");
+      overlay.addEventListener("click", () => {
+        overlay.classList.add("hidden");
+        hiddenMenu.classList.add("hidden");
+      });
+    });
 }
 
 // Renderizando as menssagens no container html
 function renderMessages(res) {
   container.innerHTML = "";
-  res.data.forEach((object) => {
-    const from = object.from;
-    const to = object.to;
-    const text = object.text;
-    const time = object.time;
-    const type = object.type;
+  res.forEach((object) => {
+    const { from } = object;
+    const { to } = object;
+    const { text } = object;
+    const { time } = object;
+    const { type } = object;
 
     const backgroundColor =
       type === "status"
@@ -119,7 +140,17 @@ function renderMessages(res) {
 function retrieveMessages() {
   axios
     .get(urlMessages)
-    .then(renderMessages)
+    .then((res) => {
+      // Filtrando menssagems que são públicas ou privadas para o usuário em questão
+      const filteredMessages = res.data.filter((message) => {
+        return (
+          message.to === "Todos" ||
+          message.to === userName ||
+          message.from === userName
+        );
+      });
+      renderMessages(filteredMessages);
+    })
     .catch((err) => {
       console.log(err);
     });
@@ -143,12 +174,23 @@ function sendMessage() {
   // Limpando o campo para digitar após a menssagem ser enviada
   document.querySelector("#message").value = "";
 
-  axios
-    .post(urlMessages, data)
-    .then(retrieveMessages)
-    .catch(() => {
-      window.location.reload();
-    });
+  //Verificando se o destinatário ainda está online:
+  axios.get(urlParticipants).then((res) => {
+    if (personName != "Todos") {
+      if (!res.data.map((user) => user.name).includes(personName)) {
+        // alert("Esta usuário está offline!");
+        window.location.reload();
+      }
+    }
+
+    // Se o usuário está online, a mensagem é postada
+    axios
+      .post(urlMessages, data)
+      .then(retrieveMessages)
+      .catch(() => {
+        window.location.reload();
+      });
+  });
 }
 
 // Entrando no chat
@@ -213,4 +255,5 @@ btnLogin.addEventListener("click", () => {
 // Botão para fechar o menu com os usuários online, quando aberto
 closeMenu.addEventListener("click", () => {
   hiddenMenu.classList.add("hidden");
+  overlay.classList.add("hidden");
 });
