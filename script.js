@@ -139,18 +139,17 @@ function retrieveMessages() {
   axios
     .get(urlMessages)
     .then((res) => {
-      // Filtrando menssagems que são públicas ou privadas para o usuário em questão
-      // const filteredMessages = res.data.filter((message) => {
-      //   return (
-      //     message.from === userName ||
-      //     message.to === "Todos" ||
-      //     message.to === userName ||
-      //     message.type === "message"
-      //   );
-      // });
-      renderMessages(res.data);
+      // Filtrando menssagems que são reservadas para outros usuaŕios
+      const filteredMessages = res.data.filter((message) => {
+        if (message.type === "private_message") {
+          if (message.from !== userName && message.to !== userName)
+            return false;
+        }
+        return true;
+      });
+      renderMessages(filteredMessages);
     })
-    .catch((err) => {
+    .catch(() => {
       alert("Erro ao carregar as mensagems, entre novamente no bate papo.");
       window.location.reload();
     });
@@ -238,12 +237,12 @@ function enterChatRoom() {
         // Atualizando a lista de menssagens a cada 2s
         setInterval(() => {
           retrieveMessages();
-        }, 3000);
+        }, 2000);
 
         // Atualizando a lista de participantes a cada 10s
         setInterval(() => {
           retrievePartcipants();
-        }, 10000);
+        }, 1000);
       })
       .catch(() => {
         alert("Erro ao entrar na sala, tente novamente.");
