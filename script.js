@@ -60,13 +60,15 @@ function selectedPerson(person) {
   if (person !== everyone) {
     everyone.querySelector('[data-test="check"]').classList.add("hidden");
   }
-  document
-    .querySelectorAll('.online-users [data-test="check"]')
-    .forEach((user) => {
-      user.classList.add("hidden");
-    });
   // Salvando o nome da pessoa
   personName = person.querySelector("h2").textContent;
+  document
+    .querySelectorAll('.online-users [data-test="check"]')
+    .forEach((check) => {
+      if (check.parentElement.querySelector("h2").textContent !== personName) {
+        check.classList.add("hidden");
+      }
+    });
   // Adicionando ion-icon de check
   person.querySelector(".check").classList.remove("hidden");
 }
@@ -75,19 +77,26 @@ function selectedPerson(person) {
 function renderPartcipants(users) {
   hiddenMenu.classList.remove("hidden");
   hiddenMenu.classList.add("appear");
+
   const person = hiddenMenu.querySelector(".online-users .person");
   person.innerHTML = "";
 
-  // Renderizando no HTML
-  users.forEach((user) => {
-    person.innerHTML += `
+  // Renderizando no HTML (em ordem alfabética)
+  users
+    .sort((a, b) => a - b)
+    .forEach((user) => {
+      // Mantendo o sinal de check caso a lista de pessoas seja atualizada e
+      // pessoa selecionada ainda esteja na sala
+      const checkSign = user.name === personName ? "" : "hidden";
+
+      person.innerHTML += `
       <li data-test="participant" onclick="selectedPerson(this)">
         <ion-icon name="person-circle"></ion-icon>
         <h2>${user.name}</h2>
-        <ion-icon data-test="check" class="hidden check" name="checkmark-circle"></ion-icon>
+        <ion-icon data-test="check" class="${checkSign} check" name="checkmark-circle"></ion-icon>
       </li>
     `;
-  });
+    });
 }
 
 // GET request para checar os participantes ativos no chat
@@ -100,7 +109,13 @@ function retrievePartcipants() {
   axios.get(urlParticipants).then((res) => {
     const users = res.data;
     if (!hiddenMenu.classList.contains("hidden")) {
-      renderPartcipants(users);
+      renderPartcipants(
+        users.filter(
+          // Passando para a função de renderização todos os usuários com
+          // exceção do próprio
+          (user) => user.name !== userName
+        )
+      );
     }
   });
 }
@@ -122,8 +137,16 @@ function renderMessages(res) {
         ? "#FFDEDE"
         : "#FFF";
 
+    // Escondendo mensagens privadas para outros usuarios (metodo diferente da filtragrem)
+    let display = "";
+    if (type === "private_message") {
+      if (from !== userName && to !== userName) {
+        display = "hidden";
+      }
+    }
+
     container.innerHTML += `
-      <div data-test="message" id="m-${i + 1}">
+      <div data-test="message" id="m-${i + 1}" class=${display}>
         <p style="background-color: ${backgroundColor}">
           <span class="time">(${time})</span> <strong>${from}</strong> 
             para <strong>${to}</strong>: ${text}
@@ -142,23 +165,7 @@ function retrieveMessages() {
     .then((res) => {
       // Esconde a tela de carregamento
       document.querySelector(".loading-screen").classList.add("hidden");
-
-      // Filtrando menssagems que são reservadas para outros usuaŕios:
-      // A filtragem das mensagens está funcionando, quando uma menssagem privada
-      // não é destinada para o usuário em questão, ela não é renderizada, mas isso
-      // está conflitando com o avaliador, dependendo do momento do teste é indicado
-      // que está faltando mensagens (as que foram filtradas, corretamente)
-      // ------
-      const filteredMessages = res.data.filter((message) => {
-        if (message.type === "private_message") {
-          if (message.from !== userName && message.to !== userName)
-            return false;
-        }
-        return true;
-      });
-      // --> O correto seria passas filteredMessages como parâmetro:
-      console.log(filteredMessages);
-      renderMessages(filteredMessages);
+      renderMessages(res.data);
     })
     .catch(() => {
       alert("Erro ao carregar as mensagems, entre novamente no bate papo.");
