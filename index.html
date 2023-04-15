@@ -13,12 +13,14 @@
         <title>Bate Papo UOL</title>
     </head>
 
-    <body>
+    <body class="mobile">
         <!-- Tela de login -->
         <div class="login">
             <img src="./assets/logo 2.png" alt="">
             <input data-test="input-name" type="text" placeholder="Digite seu nome" autofocus>
             <button data-test="send-name" disabled>Entrar</button>
+            <ion-icon onclick="changeDevice(this)" id="pc" name="desktop-sharp"></ion-icon>
+            <ion-icon onclick="changeDevice(this)" id="phone" class="hidden" name="phone-portrait-sharp"></ion-icon>
         </div>
         <!-- Tela de carregamento -->
         <div class="loading-screen hidden">
@@ -39,7 +41,7 @@
         </footer>
 
         <!-- Hidden menu -->
-        <div class="menu hidden">
+        <div class="menu hidden appear">
             <ion-icon id="close" name="close-outline"></ion-icon>
             <h1>Escolha um contato para enviar menssagem:</h1>
             <div data-test="all" onclick="selectedPerson(this)" class="everyone">
@@ -64,9 +66,9 @@
                 <h2>Reservadamente</h2>
                 <ion-icon data-test="check" class="hidden check" name="checkmark-circle"></ion-icon>
             </div>
-            <!-- Overlay para clicar fora do menu escondido e voltar para o chat -->
-            <div data-test="overlay" class="overlay"></div>
         </div>
+        <!-- Overlay para clicar fora do menu escondido e voltar para o chat -->
+        <div data-test="overlay" class="overlay hidden appear"></div>
 
 
         <!-- Ion icon -->
@@ -76,8 +78,11 @@
         <!-- Axios -->
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-        <!-- App JS -->
+        <!-- Script JS -->
         <script src="script.js"></script>
+        <!-- Change Device JS -->
+        <script src="changeDevice.js"></script>
+
     </body>
 
 </html>

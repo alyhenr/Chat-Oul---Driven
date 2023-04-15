@@ -76,7 +76,7 @@ function selectedPerson(person) {
 // Renderizando os usuários online quando o menu é clicado
 function renderPartcipants(users) {
   hiddenMenu.classList.remove("hidden");
-  hiddenMenu.classList.add("appear");
+  overlay.classList.remove("hidden");
 
   const person = hiddenMenu.querySelector(".online-users .person");
   person.innerHTML = "";
@@ -104,6 +104,7 @@ function retrievePartcipants() {
   if (arguments.length > 0) {
     if (arguments[0].name === "people") {
       hiddenMenu.classList.remove("hidden");
+      overlay.classList.remove("hidden");
     }
   }
   axios.get(urlParticipants).then((res) => {
@@ -290,6 +291,7 @@ btnLogin.addEventListener("click", () => {
 [closeMenu, overlay].forEach((element) => {
   element.addEventListener("click", () => {
     hiddenMenu.classList.add("hidden");
+    overlay.classList.add("hidden");
 
     // Se ao fechar o menu lateral uma pessoa tiver sido selecionada
     // para receber a mensagem, isso fica indicado no placholder do input de mensagem
