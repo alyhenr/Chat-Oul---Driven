@@ -57,7 +57,7 @@ function messageType(visibility) {
 // Selecionando uma pessoa para mandar menssagem
 function selectedPerson(person) {
   const everyone = document.querySelector(".everyone");
-  if (person != everyone) {
+  if (person !== everyone) {
     everyone.querySelector('[data-test="check"]').classList.add("hidden");
   }
   document
@@ -74,6 +74,7 @@ function selectedPerson(person) {
 // Renderizando os usuários online quando o menu é clicado
 function renderPartcipants(users) {
   hiddenMenu.classList.remove("hidden");
+  hiddenMenu.classList.add("appear");
   const person = hiddenMenu.querySelector(".online-users .person");
   person.innerHTML = "";
 
@@ -148,15 +149,16 @@ function retrieveMessages() {
       // está conflitando com o avaliador, dependendo do momento do teste é indicado
       // que está faltando mensagens (as que foram filtradas, corretamente)
       // ------
-      // const filteredMessages = res.data.filter((message) => {
-      //   if (message.type === "private_message") {
-      //     if (message.from !== userName && message.to !== userName)
-      //       return false;
-      //   }
-      //   return true;
-      // });
+      const filteredMessages = res.data.filter((message) => {
+        if (message.type === "private_message") {
+          if (message.from !== userName && message.to !== userName)
+            return false;
+        }
+        return true;
+      });
       // --> O correto seria passas filteredMessages como parâmetro:
-      renderMessages(res.data);
+      console.log(filteredMessages);
+      renderMessages(filteredMessages);
     })
     .catch(() => {
       alert("Erro ao carregar as mensagems, entre novamente no bate papo.");
@@ -174,9 +176,9 @@ function sendMessage() {
 
   const data = {
     from: userName,
-    to: personName != "Todos" ? personName : "Todos",
+    to: personName !== "Todos" ? personName : "Todos",
     text: messageContent,
-    type: messageVisibility != undefined ? messageVisibility : "message",
+    type: messageVisibility !== undefined ? messageVisibility : "message",
   };
 
   // Limpando o input de digitar após a menssagem ser enviada
@@ -194,7 +196,7 @@ function sendMessage() {
     }
     //  2.
     // Verifica se o destinatáio ainda está online:
-    if (personName != "Todos") {
+    if (personName !== "Todos") {
       if (!res.data.map((user) => user.name).includes(personName)) {
         alert("Esse usuário não está mais online...");
         window.location.reload();
@@ -224,7 +226,7 @@ function enterChatRoom() {
       retrievePartcipants();
       // Adicionando o event listener para a tecla enter enviar mensagens também
       document.querySelector("#message").addEventListener("keypress", (ev) => {
-        if (ev.key === "Enter" && ev.currentTarget.value != "") {
+        if (ev.key === "Enter" && ev.currentTarget.value !== "") {
           sendMessage();
         }
       });
@@ -256,7 +258,7 @@ login.addEventListener("keypress", (ev) => {
   // O botão de login é liberado quando a pessoa digita algum nome
   btnLogin.disabled = false;
   // Habilitando a escolha do nome para a tecla "Enter"
-  if (ev.key === "Enter" && login.value != "") {
+  if (ev.key === "Enter" && login.value !== "") {
     userName = login.value;
     loginScreen.classList.add("hidden");
     // Chamando a função para entrar no bate papo
@@ -266,7 +268,7 @@ login.addEventListener("keypress", (ev) => {
 });
 // Botão de login
 btnLogin.addEventListener("click", () => {
-  if (login.value != "") {
+  if (login.value !== "") {
     userName = login.value;
     loginScreen.classList.add("hidden");
     // Chamando a função para entrar no bate papo
@@ -284,7 +286,7 @@ btnLogin.addEventListener("click", () => {
 
     // Se ao fechar o menu lateral uma pessoa tiver sido selecionada
     // para receber a mensagem, isso fica indicado no placholder do input de mensagem
-    if (personName != "Todos") {
+    if (personName !== "Todos") {
       document.querySelector(".recipient").classList.remove("hidden");
       document.querySelector(".recipient").innerHTML = `
         <h6>Enviando para ${personName} 
