@@ -138,7 +138,7 @@ function renderMessages(res) {
         ? "#FFDEDE"
         : "#FFF";
 
-    // Escondendo mensagens privadas para outros usuarios (metodo diferente da filtragrem)
+    // Escondendo mensagens privadas destinadas a outros usuarios:
     let display = "";
     if (type === "private_message") {
       if (from !== userName && to !== userName) {
@@ -198,18 +198,18 @@ function sendMessage() {
     // (em caso de ficar usando outra aba e deixar o chat aberto,
     //   o chat continua aparacendo mas a conexão é perdido e o post na url
     //   de status retorna status code 400 (Bad Request))
-    if (!res.data.map((user) => user.name).includes(userName)) {
-      alert("Reconecte-se na sala.");
-      window.location.reload();
-    }
+    // if (!res.data.map((user) => user.name).includes(userName)) {
+    //   alert("Reconecte-se na sala.");
+    //   window.location.reload();
+    // }
     //  2.
     // Verifica se o destinatáio ainda está online:
-    if (personName !== "Todos") {
-      if (!res.data.map((user) => user.name).includes(personName)) {
-        alert("Esse usuário não está mais online...");
-        window.location.reload();
-      }
-    }
+    // if (personName !== "Todos") {
+    //   if (!res.data.map((user) => user.name).includes(personName)) {
+    //     alert("Esse usuário não está mais online...");
+    //     window.location.reload();
+    //   }
+    // }
 
     // Se o usuário está online, a mensagem é postada
     axios
