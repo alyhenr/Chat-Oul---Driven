@@ -16,12 +16,16 @@ const login = document.querySelector(".login input");
 const btnLogin = document.querySelector(".login button");
 // Armazenando o container html onde as menssagens serão renderizadas
 const container = document.querySelector(".container");
+// Tela de carregamento
+const loadingScreen = document.querySelector(".loading-screen");
 // Menu com usuários online
 const hiddenMenu = document.querySelector(".menu");
 // Botão para fechar o menu dos usuários
 const closeMenu = document.querySelector("#close");
 // Overlay para fechar o menu dos usuários também
 const overlay = document.querySelector(".overlay");
+// Indicação no input do destinatário e o tipo de mensagem
+const recipient = document.querySelector(".recipient");
 // ---------------------------------------------------
 // Variáveis a serem usada:
 // Variável para o nome do usuário
@@ -92,7 +96,9 @@ function renderPartcipants(users) {
       person.innerHTML += `
       <li data-test="participant" onclick="selectedPerson(this)">
         <ion-icon name="person-circle"></ion-icon>
-        <h2>${user.name}</h2>
+        <h2>${
+          user.name.length > 12 ? user.name.slice(0, 12) + "..." : user.name
+        }</h2>
         <ion-icon data-test="check" class="${checkSign} check" name="checkmark-circle"></ion-icon>
       </li>
     `;
@@ -165,7 +171,7 @@ function retrieveMessages() {
     .get(urlMessages)
     .then((res) => {
       // Esconde a tela de carregamento
-      document.querySelector(".loading-screen").classList.add("hidden");
+      loadingScreen.classList.add("hidden");
       renderMessages(res.data);
     })
     .catch(() => {
@@ -198,18 +204,18 @@ function sendMessage() {
     // (em caso de ficar usando outra aba e deixar o chat aberto,
     //   o chat continua aparacendo mas a conexão é perdido e o post na url
     //   de status retorna status code 400 (Bad Request))
-    // if (!res.data.map((user) => user.name).includes(userName)) {
-    //   alert("Reconecte-se na sala.");
-    //   window.location.reload();
-    // }
+    if (!res.data.map((user) => user.name).includes(userName)) {
+      alert("Reconecte-se na sala.");
+      window.location.reload();
+    }
     //  2.
     // Verifica se o destinatáio ainda está online:
-    // if (personName !== "Todos") {
-    //   if (!res.data.map((user) => user.name).includes(personName)) {
-    //     alert("Esse usuário não está mais online...");
-    //     window.location.reload();
-    //   }
-    // }
+    if (personName !== "Todos") {
+      if (!res.data.map((user) => user.name).includes(personName)) {
+        alert("Esse usuário não está mais online...");
+        window.location.reload();
+      }
+    }
 
     // Se o usuário está online, a mensagem é postada
     axios
@@ -249,7 +255,7 @@ function enterChatRoom() {
       // Atualizando a lista de menssagens a cada 3s
       setInterval(() => {
         retrieveMessages();
-      }, 2000);
+      }, 3000);
       // Atualizando a lista de participantes a cada 10s
       setInterval(() => {
         retrievePartcipants();
@@ -270,7 +276,7 @@ login.addEventListener("keypress", (ev) => {
     userName = login.value;
     loginScreen.classList.add("hidden");
     // Chamando a função para entrar no bate papo
-    document.querySelector(".loading-screen").classList.remove("hidden");
+    loadingScreen.classList.remove("hidden");
     enterChatRoom();
   }
 });
@@ -280,7 +286,7 @@ btnLogin.addEventListener("click", () => {
     userName = login.value;
     loginScreen.classList.add("hidden");
     // Chamando a função para entrar no bate papo
-    document.querySelector(".loading-screen").classList.remove("hidden");
+    loadingScreen.classList.remove("hidden");
     enterChatRoom();
   }
 });
@@ -296,15 +302,15 @@ btnLogin.addEventListener("click", () => {
     // Se ao fechar o menu lateral uma pessoa tiver sido selecionada
     // para receber a mensagem, isso fica indicado no placholder do input de mensagem
     if (personName !== "Todos") {
-      document.querySelector(".recipient").classList.remove("hidden");
-      document.querySelector(".recipient").innerHTML = `
+      recipient.classList.remove("hidden");
+      recipient.innerHTML = `
         <h6>Enviando para ${personName} 
         (${
           messageVisibility === "message" ? "publicamente" : "reservadamente"
         })</h6>
       `;
     } else {
-      document.querySelector(".recipient").classList.add("hidden");
+      recipient.classList.add("hidden");
     }
   });
 });
