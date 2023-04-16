@@ -308,3 +308,20 @@ btnLogin.addEventListener("click", () => {
     }
   });
 });
+
+// ---------------
+// Adicionando um preview dos usuários online na tela de login
+axios.get(urlParticipants).then((res) => {
+  const preview = document.querySelector(".preview-users");
+  preview.innerHTML = "";
+  res.data.forEach((user) => {
+    preview.innerHTML += `        
+        <div>
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <h2>${
+            user.name.length > 7 ? user.name.slice(0, 5) + "..." : user.name
+          }</h2>
+        </div>
+      `;
+  });
+});

@@ -94,8 +94,38 @@ body {
     width: 30px;
     height: 30px;
 
-    margin-top: 170px;
+    margin-top: 30px;
     color: #f3f3f3;
+}
+
+.preview-users {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    gap: 30px;
+    margin: 50px 10px 5px;
+
+    flex-wrap: wrap;
+}
+
+.preview-users>div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.preview-users>div>ion-icon {
+    width: 34px;
+    height: 34px;
+
+    color: #353131;
+}
+
+.preview-users>div>h2 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 12px;
 }
 
 /* Tela de carregamento */
