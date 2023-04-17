@@ -105,10 +105,14 @@ body {
     justify-content: space-around;
     align-items: center;
 
+    max-width: 80%;
+    max-height: 150px;
+
     gap: 30px;
     margin: 50px 10px 5px;
 
     flex-wrap: wrap;
+    overflow-y: scroll;
 }
 
 .preview-users>div {
@@ -354,6 +358,7 @@ ion-icon:hover {
     height: 32px;
 
     margin-bottom: -40px;
+    margin-top: -10px;
     place-self: end;
 }
 
@@ -374,7 +379,7 @@ ion-icon:hover {
     align-items: center;
     text-align: center;
 
-    padding: 40px 20px;
+    padding: 40px 10px 20px;
     color: #000000;
 
 }
@@ -399,8 +404,7 @@ ion-icon:hover {
 }
 
 .menu .check {
-    position: absolute;
-    left: 200px;
+    margin-left: 10px;
 }
 
 .person {
