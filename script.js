@@ -1,5 +1,5 @@
 // Token HUB
-axios.defaults.headers.common["Authorization"] = "FmwapjukXtQjz0rEIouU5AMC";
+axios.defaults.headers.common["Authorization"] = "U6fPRnXorrTvHpB1OupJQJXj";
 
 // URL's a serem utilizadas para as requesições
 const urlParticipants =
